@@ -24,7 +24,7 @@ module.exports = (router, expressApp, authRoutesMethods) => {
     middleware below will handle sending the bearer token back to the client as
     long as we validate their username and password properly using the mode we'll
     implement later in this tutorial. */
-    router.post('/login’, expressApp.oauth.grant()')
+    router.post('/login', expressApp.oauth.grant())
 
 
     return router

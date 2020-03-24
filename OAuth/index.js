@@ -21,8 +21,23 @@ const sqlite3 = require('better-sqlite3')('database.db');
 const bodyParser = require('body-parser')
 const express = require('express')
 const expressApp = express()
-//expressApp.use(bodyParser.urlencoded({ extended: true }))
+expressApp.use(bodyParser.urlencoded({ extended: true }))
 expressApp.use(bodyParser.json())
+
+/* We require the node-oauth2-server library */
+const oAuth2Server = require('node-oauth2-server')
+
+/* Here we instantiate the model we just made and inject the dbHelpers we use in it */
+const oAuthModel = require('./auth/tokenModel')(sqlite3)
+
+/* Now we instantiate the oAuth2Server and pass in an object which tells
+the the password library that we're using the password  grant type and
+give it the model we just required. */
+expressApp.oauth = oAuth2Server({
+    model: oAuthModel,
+    grants: ['password'],
+    debug: true
+})
 
 /* Here we require the authRoutesMethods object from the module
  that we just made */
@@ -30,11 +45,17 @@ const RoutesMethods = require('./auth/routesMethods')(sqlite3);
 
 /* Now we instantiate the authRouter module and inject all
 of its dependencies. */
-const Router = require('./auth/router')(express.Router(),
+const AuthRouter = require('./auth/router')(express.Router(),
                                             expressApp,
                                             RoutesMethods)
-expressApp.use('/auth', Router);
-//expressApp.use(expressApp.oauth.errorHandler())
+
+const defRouter = require('./defRouter')(express.Router(), expressApp);
+
+
+
+expressApp.use('/auth', AuthRouter);
+expressApp.use(defRouter);
+expressApp.use(expressApp.oauth.errorHandler())
 
 //MARK: --------------- REQUIRED OBJECTS
 

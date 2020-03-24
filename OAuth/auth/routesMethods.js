@@ -39,6 +39,7 @@ function registerUser(req, res){
     //get the username and password:
     const username = req.body.username
     let password = req.body.password
+    console.log(req.body.username);
 
     //validate the request
     if (!isString(username) || !isString(password)){
