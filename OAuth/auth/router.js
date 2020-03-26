@@ -15,6 +15,11 @@
  */
 module.exports = (router, expressApp, authRoutesMethods) => {
 
+    function test(req, res) {
+        console.log("schomme")
+        res.send("TJENIXEN");
+    }
+
     /* This is the route client's will call to register new users. It's very aptly named. */
     router.post('/register', authRoutesMethods.registerUser)
 
@@ -24,8 +29,30 @@ module.exports = (router, expressApp, authRoutesMethods) => {
     middleware below will handle sending the bearer token back to the client as
     long as we validate their username and password properly using the mode we'll
     implement later in this tutorial. */
-    router.post('/login', expressApp.oauth.grant())
+    router.post('/login', function(req, res) {
+        /*
+        var h = expressApp.oauth.grant();
+        h(req, res);
+        console.log(h);
+        */
+       expressApp.oauth.model.getUser(req.body.username, req.body.password, (err, user) => {
+           console.log("titta här");
+           console.log(user);
+           access_token = expressApp.oauth.model.generateAccessToken();
+           expressApp.oauth.model.saveAccessToken(access_token, null, null, user, () => {
+               console.log("saved");
+           });
+       });
+    });
 
 
     return router
 }
+
+/*
+Användare vill komma åt innehåll på applikation 1
+Applikation 1 kontaktar IdP med rätt headers och kollar om vi är inloggad
+Om vi inte är inloggade redirectar IdP till inloggningssidan
+När användaren loggat in skickar IdP tillbaka användaren till redirect_uri med access_token:en
+
+*/

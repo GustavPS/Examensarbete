@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-
     </head>
     <body>
         <div>
-            <form>
+            <form method="POST" action="/auth/login">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Username" />
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Password" />
+                <input type="hidden" name="grant_type" value="password" />
+                <input type="hidden" name="client_id" value="null" />
+                <input type="hidden" name="client_secret" value="null" />
+                <input type="submit" value="Login" />
             </form>
         </div>
     </body>

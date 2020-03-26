@@ -36,7 +36,10 @@ give it the model we just required. */
 expressApp.oauth = oAuth2Server({
     model: oAuthModel,
     grants: ['password'],
-    debug: true
+    debug: true,
+    options: {
+        continueMiddleware: true
+    }
 })
 
 /* Here we require the authRoutesMethods object from the module

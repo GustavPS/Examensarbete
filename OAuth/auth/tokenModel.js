@@ -19,7 +19,9 @@ module.exports =  (injectedDB) => {
 
         saveAccessToken: saveAccessToken,
 
-        getAccessToken: getAccessToken
+        getAccessToken: getAccessToken,
+
+        generateAccessToken: generateAccessToken
     }
 }
 
@@ -119,12 +121,15 @@ function getUser(username, password, callback){
 }
 
 function saveTokenToDB(accessToken, userID, callback) {
+    var d = new Date();
+    d.setHours(d.getHours() + 1);
+    var s = d.getTime();
     let stmt = db.prepare('DELETE FROM tokens WHERE userid = ?');
     stmt.run(userID);
-    stmt = db.prepare('INSERT INTO tokens (userid, token) VALUES (?, ?)');
+    stmt = db.prepare('INSERT INTO tokens (userid, token, expires) VALUES (?, ?, ?)');
     console.log(userID);
     console.log(accessToken);
-    stmt.run(userID, accessToken);
+    stmt.run(userID, accessToken, s);
     callback(null);
     // Add something for fail??
 }
@@ -212,4 +217,8 @@ function createAccessTokenFrom(userID) {
         },
         expires: null
     })
+}
+
+function generateAccessToken() {
+    return crypto.randomBytes(20).toString('hex');
 }
