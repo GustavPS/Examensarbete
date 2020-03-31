@@ -29,18 +29,42 @@ module.exports = (router, expressApp, authRoutesMethods) => {
     middleware below will handle sending the bearer token back to the client as
     long as we validate their username and password properly using the mode we'll
     implement later in this tutorial. */
+
+    router.post('/authenticated', function(req, res) {
+        if (req.session.access_token != undefined) {
+            console.log("hej");
+            let userID = expressApp.oauth.model.getUserIDFromToken(req.session.access_token);
+            req.session.userid = userID;
+            res.redirect(307, req.body.redirect_uri);
+            console.log(req.session.access_token);
+        } else {
+            res.redirect('http://localhost:4000?redirect_uri=' + req.body.redirect_uri);
+        }
+    });
+
     router.post('/login', function(req, res) {
         /*
         var h = expressApp.oauth.grant();
         h(req, res);
         console.log(h);
         */
+
+
+
        expressApp.oauth.model.getUser(req.body.username, req.body.password, (err, user) => {
            console.log("titta här");
            console.log(user);
+           if (user === null) {
+               res.redirect(302, '/?redirect_uri=' + req.body.redirect_uri + '&error=username_password');
+               return;
+           }
            access_token = expressApp.oauth.model.generateAccessToken();
            expressApp.oauth.model.saveAccessToken(access_token, null, null, user, () => {
+               req.session.access_token = access_token;
+                 req.session.userid = req.body.username;
+
                console.log("saved");
+               res.redirect(307, req.body.redirect_uri);
            });
        });
     });

@@ -18,5 +18,9 @@ module.exports = (router, expressApp) => {
         res.sendFile(path.join(__dirname + '/public/index.html'));
     });
 
+    router.post('/', function(req, res) {
+        res.sendFile(path.join(__dirname + '/public/index.html'));
+    });
+
     return router
 }

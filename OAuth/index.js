@@ -16,13 +16,22 @@ to users such as registering and retrieving them */
 
 /* This is a library used to help parse the body of the api requests. */
 const sqlite3 = require('better-sqlite3')('database.db');
-
+var cookieSession = require('cookie-session')
 
 const bodyParser = require('body-parser')
 const express = require('express')
 const expressApp = express()
 expressApp.use(bodyParser.urlencoded({ extended: true }))
 expressApp.use(bodyParser.json())
+expressApp.use(express.static("public"));
+expressApp.use(cookieSession({
+    name: 'session',
+    keys: ['key1', 'key2'],
+    httpOnly: false,
+  
+    // Cookie Options
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }))
 
 /* We require the node-oauth2-server library */
 const oAuth2Server = require('node-oauth2-server')

@@ -21,7 +21,8 @@ module.exports =  (injectedDB) => {
 
         getAccessToken: getAccessToken,
 
-        generateAccessToken: generateAccessToken
+        generateAccessToken: generateAccessToken,
+        getUserIDFromToken: getUserIDFromToken
     }
 }
 
