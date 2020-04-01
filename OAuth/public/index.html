@@ -2,29 +2,28 @@
 <html>
     <head>
         <script src="js/main.js"></script>
-        <style>
-            #callbackError {
-                display: none;
-            }
-        </style>
+        <link rel="stylesheet" href="css/main.css" />
+
     </head>
     <body>
         <div id="loginForm">
+            <div id="errorBox">
+                <p id="error"></p>
+            </div>
+            <img id="logo" src="logo.png" />
             <form method="POST" action="/auth/login">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Username" />
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Password" />
-                <input type="hidden" name="grant_type" value="password" />
-                <input type="hidden" name="client_id" value="null" />
-                <input type="hidden" name="client_secret" value="null" />
-                <input type="hidden" name="redirect_uri" value="http://localhost:4000" id="redirect_uri" />
-                <input type="submit" value="Login" />
+                <fieldset id="inputs">
+                    <input type="text" required id="username" name="username" placeholder="Username" />
+                    <input type="password" required id="password" name="password" placeholder="Password" />
+                    <input type="hidden" name="grant_type" value="password" />
+                    <input type="hidden" name="client_id" value="null" />
+                    <input type="hidden" name="client_secret" value="null" />
+                    <input type="hidden" name="redirect_uri" value="http://localhost:4000" id="redirect_uri" />
+                    <button id="loginButton"><span>Login</span></button>
+                </fieldset>
             </form>
-            <p id="error"></p>
+            
         </div>
-        <div id="callbackError">
-            <p>redirect_uri was not set.</p>
-        </div>
+
     </body>
 </html>

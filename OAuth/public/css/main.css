@@ -1,0 +1,125 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+* {
+	font-family: "Roboto";
+}
+
+html {
+    height: 100%;
+}
+
+#loginForm {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    min-height: 300px;
+    background-color: whitesmoke;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    -webkit-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.67);
+    -moz-box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.67);
+    box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.67);
+    -webkit-animation: fadein 1.5s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 1.5s; /* Firefox < 16 */
+        -ms-animation: fadein 1.5s; /* Internet Explorer */
+         -o-animation: fadein 1.5s; /* Opera < 12.1 */
+            animation: fadein 1.5s;
+}
+
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+
+#loginForm form input[type=text],input[type=password]  {
+    font-family: 'Roboto', sans-serif;
+  color: #333;
+  font-size: 1.2rem;
+  padding: 1.5rem 2rem;
+  border-radius: 0.2rem;
+  background-color: rgb(255, 255, 255);
+  border: none;
+  display: block;
+  border-bottom: 0.3rem solid transparent;
+  transition: all 0.3s;
+  margin: 10px 0;
+}
+
+#loginForm form {
+    display: grid;
+    padding: 0 50px 50px 50px;
+}
+
+body {
+    background: radial-gradient(#513884, #000000) rgba(42, 42, 56, 0.94);
+}
+
+#logo {
+    margin: 0 auto;
+    display: table;
+    padding: 0;
+}
+
+#errorBox {
+    width: 100%;
+    height: 50px;
+    background-color: #d23a3a;
+    margin: 0;
+    padding: 0;
+    -webkit-box-shadow: 0px 1px 2px 0px rgba(74,74,74,0.75);
+    -moz-box-shadow: 0px 1px 2px 0px rgba(74,74,74,0.75);
+    box-shadow: 0px 1px 2px 0px rgba(74,74,74,0.75);
+    transition: all 1s cubic-bezier(0, 0.63, 1, 1);
+    display: none;
+}
+
+#inputs {
+    border: none;
+}
+
+#errorBox #error {
+    color: white;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    line-height: 50px;
+}
+
+#loginButton {
+    border-radius: 4px;
+    background: linear-gradient(to right, #8d6cc3, #375361) !important;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 22px;
+    padding: 20px;
+    width: 200px;
+    transition: all 0.4s;
+    cursor: pointer;
+    display: table;
+    margin: 10px auto 0 auto;
+  }
+  #loginButton span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.4s;
+  }
+  #loginButton span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+  #loginButton:hover span {
+    padding-right: 25px;
+  }
+  #loginButton:hover span:after {
+    opacity: 1;
+    right: 0;
+  }
