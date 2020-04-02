@@ -42,6 +42,14 @@ module.exports = (router, expressApp, authRoutesMethods) => {
         }
     });
 
+    router.post('/logout', function(req, res) {
+        if (req.session.access_token != undefined) {
+            expressApp.oauth.model.removeTokenFromDB(req.session.access_token);
+            req.session.access_token = null;
+        }
+        res.redirect(req.body.redirect_uri);
+    });
+
     router.post('/login', function(req, res) {
         /*
         var h = expressApp.oauth.grant();

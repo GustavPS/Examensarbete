@@ -1,8 +1,12 @@
 const express = require('express')
+var exphbs  = require('express-handlebars');
 const path = require('path');
 const app = express()
 const port = 4001;
 var Base64 = require('js-base64').Base64;
+app.use(express.static("views"));
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
 
 getCookie = (name, cookies) => {
@@ -34,8 +38,11 @@ app.get('/profile', (req, res) => {
         return;
     }
 
+    
     let json = decodeBase64(cookie);
-    res.send("Hello " + json.userid + "! Welcone to your profile.");
+
+    res.render('profile', {name: json.userid, layout: false});
+    //res.send("Hello " + json.userid + "! Welcone to your profile.");
 });
 
 app.post('/callback', (req, res) => {

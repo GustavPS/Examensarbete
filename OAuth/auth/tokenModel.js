@@ -22,7 +22,8 @@ module.exports =  (injectedDB) => {
         getAccessToken: getAccessToken,
 
         generateAccessToken: generateAccessToken,
-        getUserIDFromToken: getUserIDFromToken
+        getUserIDFromToken: getUserIDFromToken,
+        removeTokenFromDB: removeTokenFromDB
     }
 }
 
@@ -135,6 +136,10 @@ function saveTokenToDB(accessToken, userID, callback) {
     // Add something for fail??
 }
 
+function removeTokenFromDB(accessToken) {
+    let stmt = db.prepare('DELETE FROM tokens WHERE token = ?');
+    stmt.run(accessToken);
+}
 /**
  * saves the accessToken along with the userID retrieved from the given user
  *

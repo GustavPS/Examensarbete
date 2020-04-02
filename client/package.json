@@ -9,6 +9,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "exbars": "^1.0.4",
+    "express-handlebars": "^4.0.1",
     "file-system": "^2.2.2",
     "js-base64": "^2.5.2",
     "path": "^0.12.7"

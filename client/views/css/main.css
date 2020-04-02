@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+* {
+	font-family: "Roboto";
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    width: 100%;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.18);
+    color: white;
+    position: relative;
+}
+
+header img {
+    margin-left: 20px;
+}
+
+header nav {
+    float: right;
+    margin-right: 20px;
+}
+
+header nav ul {
+    list-style: none;
+    display: inline-flex;
+    line-height: 100px;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin: 0 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: white;
+    display: table;
+    transition: color 0.2s;
+}
+
+header nav ul li a:hover {
+    text-decoration: none;
+    color: rgba(245, 245, 245, 0.616);
+    display: table;
+}
+
+#background {
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: brightness(50%);
+}
+
+#wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+#splashScreen {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+}
+
+.ghost-button {
+    font-family: 'Roboto', sans-serif;
+    display: inline-block;
+    width: 200px;
+    padding: 8px;
+    color: #fff;
+    border: 1px solid #fff;
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    background: #00000029;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .ghost-button:hover {
+      background: #ffffffb0;
+      color: black;
+  }
