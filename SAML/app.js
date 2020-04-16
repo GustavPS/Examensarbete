@@ -1,5 +1,7 @@
 const express = require('express')
 const expressApp = express()
+var exphbs  = require('express-handlebars');
+const path = require('path');
 const port = 3000;
 
 var SAML = require('./saml');
@@ -13,12 +15,18 @@ expressApp.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }))
 
+  
+
 let saml = new SAML();
 var parser = require('fast-xml-parser');
 
 
 expressApp.use(express.json());       // to support JSON-encoded bodies
 expressApp.use(express.urlencoded()); // to support URL-encoded bodies
+expressApp.use(express.static("views"));
+expressApp.engine('handlebars', exphbs());
+expressApp.set('view engine', 'handlebars');
+
 const sqlite3 = require('better-sqlite3')('database.db');
 const token = require('./token')(sqlite3)
 const users = require('./users')(sqlite3)
@@ -30,6 +38,12 @@ function isAuthenticated(session) {
     console.log(users.accessTokenMatch(session.username, session.accessToken))
     return users.accessTokenMatch(session.username, session.accessToken);
 }
+
+expressApp.get('/', (req, res) => {
+    res.sendFile(
+        path.join(__dirname + '/views/index.html')
+    )
+});
 
 expressApp.post('/consume', (req, res) => {
     let xml = Buffer.from(req.body.SAMLResponse, 'base64').toString('UTF-8');
@@ -46,11 +60,15 @@ expressApp.post('/consume', (req, res) => {
 
     // 2. Finns username i databasen, redirecta till RelayState med korrekt info (t.ex användarnamn)
     // 3. Finns inte username i databasen, skapa den och redirecta till RelayState med korrekt info (t.ex användarnamn)
-})
+});
+
+expressApp.post('/logout', (req, res) => {
+    saml.logout(req, res);
+});
 
 expressApp.get('/profile', (req, res) => {
     if (isAuthenticated(req.session)) {
-        res.send("Välkommen " + req.session.username) ;
+        res.render('profile', {name: req.session.username, layout: false});
     } else {
         saml.startAuth(req, res);
     }

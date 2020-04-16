@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="css/main.css" />
+    </head>
+    <body>
+        <div id="background">
+        </div>
+        <div id="wrapper">
+            <header>
+                <img src="images/logo_white.png" width="100"/>
+                <nav>
+                    <ul>
+                        <li><a href="#">Link 1</a></li>
+                        <li><a href="#">Link 2</a></li>
+                        <li><a href="#">Link 3</a></li>
+                        <li><a href="#">Link 4</a></li>
+                    </ul>
+                </nav>
+            </header>
+            <div id="splashScreen">
+                <h1>Welcome {{name}}!</h1>
+                <form method="POST" action="http://localhost:3000/logout">
+                    <input class="ghost-button" type="submit" value="Logout" />
+                </form>
+            </div>
+
+        </div>
+
+    </body>
+</html>

@@ -54,4 +54,10 @@ module.exports = class SAML {
         });
 
     }
+
+    logout(req, res) {
+        req.session.accessToken = undefined;
+        req.session.username = undefined;
+        res.redirect('http://193.14.194.203/simplesaml/saml2/idp/SingleLogoutService.php?ReturnTo=http://localhost:3000');
+    }
 }
