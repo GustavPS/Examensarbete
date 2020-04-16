@@ -1,10 +1,10 @@
 const stringGenerator = require('crypto-random-string');
 const zlib = require('zlib');
 
-class SAML {
+module.exports = class SAML {
     constructor() {
         this.IDLength = 32;
-        this.issuer = 'onelogin_saml';
+        this.issuer = 'http://localsp';
     }
     
     generateID() {
@@ -16,7 +16,7 @@ class SAML {
         return date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth()+1)).slice(-2) + '-' + ('0' + date.getUTCDate()).slice(-2) + 'T' + ('0' + (date.getUTCHours()+2)).slice(-2) + ":" + ('0' + date.getUTCMinutes()).slice(-2) + ":" + ('0' + date.getUTCSeconds()).slice(-2) + "Z";
     }
 
-    getSAMLRequest(id) {
+    getSAMLRequest(id, req) {
         var issue_instant = this.getIssueInstant();
         var const_assertion_consumer_service_url = 'http://' + req.headers.host + '/saml/consume';  // Post auth destination
 
@@ -35,9 +35,9 @@ class SAML {
         zlib.deflateRaw(request, cb);
     }
 
-    startAuth(res) {
+    startAuth(req, res) {
         let id = "_" + this.generateID();
-        let request = this.getSAMLRequest(id);
+        let request = this.getSAMLRequest(id, req);
         this.encode(request, (err, buffer) => {
             if (err) {
                 console.log("Error: " + err);
@@ -46,6 +46,7 @@ class SAML {
             let compressed_request = buffer;
             let base64 = compressed_request.toString('base64');
             let encoded = encodeURIComponent(base64);
+            res.redirect('http://193.14.194.203/simplesaml/saml2/idp/SSOService.php?SAMLRequest=' + encoded + '&RelayState=' + req.originalUrl);
 
             // Hämta API nyckeln för this.issuer i en databas (Det är nog en URL?)
             // Lägg till ?SAMLRequest=encoded
