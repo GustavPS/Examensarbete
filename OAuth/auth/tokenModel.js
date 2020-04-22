@@ -201,6 +201,9 @@ function getAccessToken(bearerToken, callback) {
 
 function getUserIDFromToken(token) {
     const row = db.prepare('SELECT userid FROM tokens WHERE token = ?').get(token);
+    if (row == undefined) {
+        return null;
+    }
     return row.userid;
 }
 

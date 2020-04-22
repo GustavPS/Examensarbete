@@ -34,6 +34,12 @@ module.exports = (router, expressApp, authRoutesMethods) => {
         if (req.session.access_token != undefined) {
             console.log("hej");
             let userID = expressApp.oauth.model.getUserIDFromToken(req.session.access_token);
+
+            // Invalid or expired token
+            if (userID == null) {
+                res.redirect('http://localhost:4000?redirect_uri=' + req.body.redirect_uri);
+                return;
+            }
             req.session.userid = userID;
             res.redirect(307, req.body.redirect_uri);
             console.log(req.session.access_token);

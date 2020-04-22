@@ -31,10 +31,10 @@ decodeBase64 = (s) => {
 }
 
 isAuthenticated = (session) => {
-    if (session.username === undefined || session.access_token === undefined) {
+    if (session.userid === undefined || session.access_token === undefined) {
         return false;
     }
-    return users.accessTokenMatch(session.username, session.access_token);
+    return users.accessTokenMatch(session.userid, session.access_token);
 }
 
 app.get('/', (req, res) => {
@@ -53,14 +53,14 @@ app.get('/profile', (req, res) => {
     
     let json = decodeBase64(cookie);
 
-    res.render('profile', {name: json.username, layout: false});
+    res.render('profile', {name: req.session.userid, layout: false});
     //res.send("Hello " + json.userid + "! Welcone to your profile.");
 });
 
 app.post('/callback', (req, res) => {
     let cookie = getCookie("session", req.headers.cookie);
     let json = decodeBase64(cookie);
-    console.log(json);
+    console.log("callback")
     users.createUserIfNotExist(json.userid);
     users.saveToken(json.userid, json.access_token);
     res.redirect(302, '/profile');
