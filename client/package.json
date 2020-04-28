@@ -9,7 +9,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "better-sqlite3": "^6.0.1",
+    "cookie-session": "^1.4.0",
     "exbars": "^1.0.4",
+    "express": "^4.17.1",
     "express-handlebars": "^4.0.1",
     "file-system": "^2.2.2",
     "js-base64": "^2.5.2",

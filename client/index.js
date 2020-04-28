@@ -51,7 +51,7 @@ app.get('/profile', (req, res) => {
     }
 
     
-    let json = decodeBase64(cookie);
+    //let json = decodeBase64(cookie);
 
     res.render('profile', {name: req.session.userid, layout: false});
     //res.send("Hello " + json.userid + "! Welcone to your profile.");

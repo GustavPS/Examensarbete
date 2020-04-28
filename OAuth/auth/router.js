@@ -37,14 +37,15 @@ module.exports = (router, expressApp, authRoutesMethods) => {
 
             // Invalid or expired token
             if (userID == null) {
-                res.redirect('http://localhost:4000?redirect_uri=' + req.body.redirect_uri);
+                res.redirect('http://192.168.43.70:4000?redirect_uri=' + req.body.redirect_uri);
                 return;
             }
             req.session.userid = userID;
             res.redirect(307, req.body.redirect_uri);
             console.log(req.session.access_token);
         } else {
-            res.redirect('http://localhost:4000?redirect_uri=' + req.body.redirect_uri);
+            res.redirect('http://192.168.43.70:4000?redirect_uri=' + req.body.redirect_uri);
+            return;
         }
     });
 
