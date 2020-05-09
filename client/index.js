@@ -2,6 +2,7 @@ const express = require('express')
 var exphbs  = require('express-handlebars');
 const path = require('path');
 const app = express()
+const request = require('request');
 var cookieSession = require('cookie-session')
 const port = 4001;
 var Base64 = require('js-base64').Base64;
@@ -45,6 +46,7 @@ app.get('/', (req, res) => {
 
 app.get('/profile', (req, res) => {
     let cookie = getCookie("session", req.headers.cookie);
+    console.log("SESISON: " + req.session.access_token);
     if (!isAuthenticated(req.session)) {
         res.redirect('/');
         return;
@@ -58,12 +60,31 @@ app.get('/profile', (req, res) => {
 });
 
 app.post('/callback', (req, res) => {
-    let cookie = getCookie("session", req.headers.cookie);
-    let json = decodeBase64(cookie);
-    console.log("callback")
-    users.createUserIfNotExist(json.userid);
-    users.saveToken(json.userid, json.access_token);
-    res.redirect(302, '/profile');
+    console.log("TOKEN: " + req.query.token)
+
+    // Check with the IdP if the access token is valid
+    request.post({
+        url: 'http://192.168.0.105:4000/auth/accessTokenValid',
+        json: {
+            access_token: req.query.token
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }, (err, response, body) => {
+        if (body.success) {
+            users.createUserIfNotExist(req.query.userid);
+            users.saveToken(req.query.userid, req.query.token);
+
+            // Set the local session
+            req.session.userid = req.query.userid;
+            req.session.access_token = req.query.token;
+            res.redirect(302, '/profile');
+        } else {
+            res.redirect(302, '/');
+        }
+    });
+
 })
 
 app.listen(port, () => console.log(`Client app listening on port ${port}!`))

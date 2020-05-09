@@ -37,16 +37,31 @@ module.exports = (router, expressApp, authRoutesMethods) => {
 
             // Invalid or expired token
             if (userID == null) {
-                res.redirect('http://192.168.43.70:4000?redirect_uri=' + req.body.redirect_uri);
+                res.redirect('http://192.168.0.105:4000?redirect_uri=' + req.body.redirect_uri);
                 return;
             }
             req.session.userid = userID;
-            res.redirect(307, req.body.redirect_uri);
+            res.redirect(307, req.body.redirect_uri + "?token="+req.session.access_token + "&userid=" + userID);
             console.log(req.session.access_token);
         } else {
-            res.redirect('http://192.168.43.70:4000?redirect_uri=' + req.body.redirect_uri);
+            res.redirect('http://192.168.0.105:4000?redirect_uri=' + req.body.redirect_uri);
             return;
         }
+    });
+
+    router.post('/accessTokenValid', function(req, res) {
+        console.log("accesstokenvalid");
+        console.log(req.body);
+        let result = {
+            success: false
+        }
+        if (req.body.access_token != undefined) {
+            let userID = expressApp.oauth.model.getUserIDFromToken(req.body.access_token);
+            if (userID != null) {
+                result.success = true;
+            }
+        }
+        res.json(result);
     });
 
     router.post('/logout', function(req, res) {
@@ -79,7 +94,7 @@ module.exports = (router, expressApp, authRoutesMethods) => {
                  req.session.userid = req.body.username;
 
                console.log("saved");
-               res.redirect(307, req.body.redirect_uri);
+               res.redirect(307, req.body.redirect_uri + "?token="+req.session.access_token + "&userid=" + req.body.username);
            });
        });
     });
