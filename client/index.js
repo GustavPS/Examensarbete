@@ -64,7 +64,7 @@ app.post('/callback', (req, res) => {
 
     // Check with the IdP if the access token is valid
     request.post({
-        url: 'http://192.168.0.105:4000/auth/accessTokenValid',
+        url: 'http://localhost:4000/auth/accessTokenValid',
         json: {
             access_token: req.query.token
         },

@@ -1,15 +1,12 @@
 var path = require('path');
-
 /**
  *
- * @param router - we assign routes and endpoint functions for each route
- *                  to this object.
+ * @param router - A Router that we can assign endpoints to
  *
- * @param expressApp - an instance of the express app. By applying
- *                     expressApp.oauth.grant() method to an endpoint
- *                     the endpoint will return a bearer token
- *                     to the client if it provides calid credentials.
+ * @param expressApp - An instance of the express App
  *
+ * @param authRoutesMethods - An instance of the authRoutesMethod module
+ * 
  * @return {route}
  */
 module.exports = (router, expressApp) => {
