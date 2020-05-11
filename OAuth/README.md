@@ -2,8 +2,8 @@
 OAuth Identity Providern (IdP) och Service Providern (SP) är implementerade i javascript med hjälp av nodeJS och express.
 
 ## Starta projektet
-1. Gå till mappen IdP och kör kommandot `npm install`.
-2. Gå till mappen SP och kör kommandot `npm install`.
+1. Gå till mappen [IdP](https://github.com/GustavPS/Examensarbete/tree/master/OAuth/IdP) och kör kommandot `npm install`.
+2. Gå till mappen [SP](https://github.com/GustavPS/Examensarbete/tree/master/OAuth/SP) och kör kommandot `npm install`.
 3. I mappen IdP, kör kommandot `node index.js`.
 4. Öppna en ny terminal i mappen SP och kör kommandot `node index.js`
 
