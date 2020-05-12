@@ -7,15 +7,28 @@ module.exports = class SAML {
         this.issuer = 'http://localsp';
     }
     
+    /**
+     *  Generates an ID
+     */
     generateID() {
         return stringGenerator({length: this.IDLength});
     }
 
+    /**
+     * Return the current date in SAML issueInstant format
+     */
     getIssueInstant() {
         let date = new Date();
         return date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth()+1)).slice(-2) + '-' + ('0' + date.getUTCDate()).slice(-2) + 'T' + ('0' + (date.getUTCHours()+2)).slice(-2) + ":" + ('0' + date.getUTCMinutes()).slice(-2) + ":" + ('0' + date.getUTCSeconds()).slice(-2) + "Z";
     }
 
+    /**
+     * 
+     * Generates a SAML request
+     * 
+     * @param {string} id 
+     * @param {object} req 
+     */
     getSAMLRequest(id, req) {
         var issue_instant = this.getIssueInstant();
         var const_assertion_consumer_service_url = 'http://' + req.headers.host + '/saml/consume';  // Post auth destination
@@ -31,10 +44,22 @@ module.exports = class SAML {
         return request;
     }
 
+    /**
+     * Encodes the requst string
+     * 
+     * @param {string} request 
+     * @param {function} cb - Callback function
+     */
     encode(request, cb) {
         zlib.deflateRaw(request, cb);
     }
 
+    /**
+     * Start the SAML authentication, generate the request and redirect the user to the IdP
+     * 
+     * @param {object} req 
+     * @param {object} res 
+     */
     startAuth(req, res) {
         let id = "_" + this.generateID();
         let request = this.getSAMLRequest(id, req);
@@ -47,14 +72,15 @@ module.exports = class SAML {
             let base64 = compressed_request.toString('base64');
             let encoded = encodeURIComponent(base64);
             res.redirect('http://193.14.194.203/simplesaml/saml2/idp/SSOService.php?SAMLRequest=' + encoded + '&RelayState=' + req.originalUrl);
-
-            // Hämta API nyckeln för this.issuer i en databas (Det är nog en URL?)
-            // Lägg till ?SAMLRequest=encoded
-            // Redirecta till den url:en.
         });
-
     }
 
+    /**
+     * Remove the users accessToken and redirect him/her to the IdP logout endpoint
+     *  
+     * @param {object} req 
+     * @param {object} res 
+     */
     logout(req, res) {
         req.session.accessToken = undefined;
         req.session.username = undefined;

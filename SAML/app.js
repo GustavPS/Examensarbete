@@ -1,50 +1,58 @@
-const express = require('express')
-const expressApp = express()
+const express = require('express');
+const expressApp = express();
 var exphbs  = require('express-handlebars');
 const path = require('path');
 const port = 3000;
 
 var SAML = require('./saml');
-var cookieSession = require('cookie-session')
+var cookieSession = require('cookie-session');
 expressApp.use(cookieSession({
     name: 'session',
     keys: ['key1', 'key2'],
     httpOnly: false,
-  
-    // Cookie Options
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }))
-
-  
+}));
 
 let saml = new SAML();
 var parser = require('fast-xml-parser');
 
-
 expressApp.use(express.json());       // to support JSON-encoded bodies
 expressApp.use(express.urlencoded()); // to support URL-encoded bodies
+
 expressApp.use(express.static("views"));
 expressApp.engine('handlebars', exphbs());
 expressApp.set('view engine', 'handlebars');
 
 const sqlite3 = require('better-sqlite3')('database.db');
-const token = require('./token')(sqlite3)
-const users = require('./users')(sqlite3)
+const token = require('./token')(sqlite3);
+const users = require('./users')(sqlite3);
 
+/**
+ * Check that the user is authenticated
+ * 
+ * @param {object} session 
+ */
 function isAuthenticated(session) {
     if (session.username === undefined || session.accessToken === undefined) {
         return false;
     }
-    console.log(users.accessTokenMatch(session.username, session.accessToken))
     return users.accessTokenMatch(session.username, session.accessToken);
 }
 
+/**
+ * Sends the startpage to the user
+ */
 expressApp.get('/', (req, res) => {
     res.sendFile(
         path.join(__dirname + '/views/index.html')
     )
 });
 
+/**
+ * Validate the SAML IdP response, generate a new accessToken and create a session for the user.
+ * If the user does not exist create it. 
+ * Redirect to requested resource.
+ */
 expressApp.post('/consume', (req, res) => {
     let xml = Buffer.from(req.body.SAMLResponse, 'base64').toString('UTF-8');
     let responseJson = parser.parse(xml);
@@ -57,30 +65,27 @@ expressApp.post('/consume', (req, res) => {
     req.session.accessToken = accessToken;
     req.session.username = username;
     res.redirect(req.body.RelayState);
-
-    // 2. Finns username i databasen, redirecta till RelayState med korrekt info (t.ex användarnamn)
-    // 3. Finns inte username i databasen, skapa den och redirecta till RelayState med korrekt info (t.ex användarnamn)
 });
 
+/**
+ * Endpoint for logging out the user
+ */
 expressApp.post('/logout', (req, res) => {
     saml.logout(req, res);
 });
 
+/**
+ * Renders the protected resource if the user is authenticated. If not start SAML authentication flow.
+ */
 expressApp.get('/profile', (req, res) => {
     if (isAuthenticated(req.session)) {
         res.render('profile', {name: req.session.username, layout: false});
     } else {
         saml.startAuth(req, res);
     }
-    // Kolla om sessionen är valid (finns i databasen)
-    // Om session inte är valid, kör saml.startAuth(req, res)
-    // Om session är valid, rendera sidan
-
 });
 
 expressApp.listen(port, () => {
-
-    console.log(`listening on port ${port}`)
+    console.log(`SAML SP listening on port: ${port}`)
 })
 
-//MARK: --------------- INITIALISE THE SERVER

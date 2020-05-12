@@ -13,6 +13,9 @@ module.exports =  (injectedDB) => {
     }
 }
 
+/**
+ * Generates a random accessToken
+ */
 function generateAccessToken() {
     return crypto.randomBytes(20).toString('hex');
 }
